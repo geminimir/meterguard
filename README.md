@@ -1,17 +1,17 @@
-# StripeMeter — pre-invoice parity for Stripe usage billing
+# MeterGuard — pre-invoice parity for Stripe usage billing
 
-[![CI](https://github.com/geminimir/stripemeter/actions/workflows/ci.yml/badge.svg)](https://github.com/geminimir/stripemeter/actions/workflows/ci.yml)
-[![GitHub release](https://img.shields.io/github/v/release/geminimir/stripemeter)](https://github.com/geminimir/stripemeter/releases)
+[![CI](https://github.com/geminimir/meterguard/actions/workflows/ci.yml/badge.svg)](https://github.com/geminimir/meterguard/actions/workflows/ci.yml)
+[![GitHub release](https://img.shields.io/github/v/release/geminimir/meterguard)](https://github.com/geminimir/meterguard/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-[![Community](https://img.shields.io/badge/Join-Community-blue)](https://github.com/geminimir/stripemeter/discussions)
-[![Contributors](https://img.shields.io/github/contributors/geminimir/stripemeter.svg)](https://github.com/geminimir/stripemeter/graphs/contributors)
+[![Community](https://img.shields.io/badge/Join-Community-blue)](https://github.com/geminimir/meterguard/discussions)
+[![Contributors](https://img.shields.io/github/contributors/geminimir/meterguard.svg)](https://github.com/geminimir/meterguard/graphs/contributors)
 
 **v0.4.0: Production-readiness pack** 
 
 See [v0.4.0 Release Notes](docs/RELEASE_NOTES_v0.4.0.md) and [Operator Runbook](RECONCILIATION.md).
 
-[Open in Codespaces](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=geminimir/stripemeter)
+[Open in Codespaces](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=geminimir/meterguard)
 · [5-min Quickstart](#quickstart)
 · [Run the Parity Demo](docs/demos/parity-scenario-test-clocks.md)
 · [Try the Stripe Test Clocks Demo](demo/stripe-test-clocks/README.md)
@@ -30,7 +30,7 @@ See [v0.4.0 Release Notes](docs/RELEASE_NOTES_v0.4.0.md) and [Operator Runbook](
 ### Try in 5 minutes → Verify in 30 seconds
 
 ```bash
-git clone https://github.com/geminimir/stripemeter && cd stripemeter
+git clone https://github.com/geminimir/meterguard && cd meterguard
 cp .env.example .env && docker compose up -d && pnpm -r build
 pnpm db:migrate && pnpm dev
 curl -fsS http://localhost:3000/health/ready | jq . || true
@@ -38,8 +38,8 @@ TENANT_ID=$(uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid) bash exampl
 curl -fsS http://localhost:3000/metrics | head -n 30  # duplicate counted once
 ```
 
-### What StripeMeter isn't
-- Not a **pricing** or **entitlement** layer (use a pricing stack like Autumn; StripeMeter ensures usage **numbers are correct**).
+### What meterguard isn't
+- Not a **pricing** or **entitlement** layer (use a pricing stack like Autumn; meterguard ensures usage **numbers are correct**).
 - Not a data warehouse.
 - Throughput targets: laptop p95 ingest ≤ **25 ms**, late-event replay (10k) ≤ **2 s**. Scale with queue/workers for higher volumes.
 
@@ -124,7 +124,7 @@ curl -s http://localhost:3000/metrics | grep -E "http_request_duration|process_"
 ```
 
 ### Configure metrics (optional)
-Put a tiny config in `examples/config/stripemeter.config.ts` to map `metric → counter` and choose a `watermarkWindowSeconds`.
+Put a tiny config in `examples/config/meterguard.config.ts` to map `metric → counter` and choose a `watermarkWindowSeconds`.
 
 ### Shadow Mode
 
@@ -144,18 +144,18 @@ Shadow Mode lets you post usage to Stripe’s test environment in parallel witho
 
 Each script checks health, sends a duplicate event with an explicit idempotency key, and prints the first lines of `/metrics` so you can see it counted once.
 
-**StripeMeter** is a Stripe-native usage metering system focused on correctness and operability. Built by developers who believe customers should be able to verify what they’re billed for.
+**meterguard** is a Stripe-native usage metering system focused on correctness and operability. Built by developers who believe customers should be able to verify what they’re billed for.
 
-## Why StripeMeter?
+## Why meterguard?
 
 - Correct usage totals via idempotent ingest and late-event handling
 - Pre-invoice parity within ε, monitored by alerts; see the runbook
 - Fresh counters and delta pushes to Stripe to avoid over-reporting
 - Operator-grade: health, metrics, dashboards, and alert recipes
 
-## What Makes StripeMeter Special
+## What Makes meterguard Special
 
-Unlike other billing solutions, StripeMeter is designed around three core principles:
+Unlike other billing solutions, meterguard is designed around three core principles:
 
 1. **Transparency First**: Customers should never be surprised by their bill
 2. **Developer Experience**: Building usage-based pricing should be delightful
@@ -196,7 +196,7 @@ Unlike other billing solutions, StripeMeter is designed around three core princi
 ## Project Structure
 
 ```
-stripemeter/
+meterguard/
 ├── packages/
 │   ├── core/           # Shared types, schemas, utilities
 │   ├── database/       # Database layer (Drizzle ORM + Redis)
@@ -213,14 +213,14 @@ stripemeter/
 
 ## Quick Start
 
-**Get StripeMeter running in under 5 minutes**
+**Get meterguard running in under 5 minutes**
 
 ### One-Command Setup
 
 ```bash
 # Clone and setup everything automatically
-git clone https://github.com/geminimir/stripemeter.git
-cd stripemeter && ./scripts/setup.sh
+git clone https://github.com/geminimir/meterguard.git
+cd meterguard && ./scripts/setup.sh
 ```
 
 That's it! The setup script will:
@@ -252,7 +252,7 @@ That's it! The setup script will:
 
 ### Try the Interactive Demo
 
-Experience StripeMeter in action with our realistic SaaS demo:
+Experience meterguard in action with our realistic SaaS demo:
 
 ```bash
 cd demo/cloudapi-saas
@@ -266,7 +266,7 @@ The demo showcases:
 - **Usage simulation tools** for different traffic patterns
 - **Complete billing transparency** that customers love
 
-Perfect for understanding how StripeMeter integrates with your SaaS application!
+Perfect for understanding how meterguard integrates with your SaaS application!
 
 ## Core Concepts
 
@@ -289,12 +289,12 @@ Hourly comparison of local totals vs Stripe reported usage. Differences beyond e
 
 **Test and optimize your pricing strategy before going live**
 
-The StripeMeter pricing simulator helps you validate billing logic, compare pricing models, and ensure customers are never surprised by their bills.
+The meterguard pricing simulator helps you validate billing logic, compare pricing models, and ensure customers are never surprised by their bills.
 
 ### Quick Example
 
 ```typescript
-import { InvoiceSimulator } from '@stripemeter/pricing-lib';
+import { InvoiceSimulator } from '@meterguard/pricing-lib';
 
 const simulator = new InvoiceSimulator();
 
@@ -343,7 +343,7 @@ console.log(`Tiered pricing: $${tieredPrice.total}`); // $220
 <summary><strong>Node.js SDK</strong></summary>
 
 ```javascript
-import { createClient } from '@stripemeter/sdk-node';
+import { createClient } from '@meterguard/sdk-node';
 
 const client = createClient({
   apiUrl: 'http://localhost:3000',
@@ -373,9 +373,9 @@ console.log(`Projected cost: $${projection.total}`);
 <summary><strong>Python SDK</strong></summary>
 
 ```python
-from stripemeter import StripeMeterClient
+from meterguard import meterguardClient
 
-client = StripeMeterClient(
+client = meterguardClient(
     api_url="http://localhost:3000",
     tenant_id="your-tenant-id",
     customer_id="cus_ABC123"
@@ -426,10 +426,10 @@ curl -X POST http://localhost:3000/v1/usage/projection \
 ```html
 <!-- Add to your customer dashboard -->
 <div id="usage-widget"></div>
-<script src="https://cdn.stripemeter.io/widget/v1/stripemeter-widget.umd.js"></script>
+<script src="https://cdn.meterguard.io/widget/v1/meterguard-widget.umd.js"></script>
 <script>
-  StripeMeterWidget.initStripeMeterWidget('usage-widget', {
-    apiUrl: 'https://api.stripemeter.io',
+  meterguardWidget.initmeterguardWidget('usage-widget', {
+    apiUrl: 'https://api.meterguard.io',
     tenantId: 'your-tenant-id',
     customerId: 'cus_ABC123',
     theme: 'light' // or 'dark'
@@ -439,16 +439,16 @@ curl -X POST http://localhost:3000/v1/usage/projection \
 
 ## Contributing
 
-StripeMeter is built by the community, for the community.
+meterguard is built by the community, for the community.
 
 ### Ways to Contribute
 
-- **Found a bug?** [Open an issue](https://github.com/stripemeter/stripemeter/issues/new?template=bug_report.md)
-- **Have an idea?** [Start a discussion](https://github.com/stripemeter/stripemeter/discussions)
+- **Found a bug?** [Open an issue](https://github.com/meterguard/meterguard/issues/new?template=bug_report.md)
+- **Have an idea?** [Start a discussion](https://github.com/meterguard/meterguard/discussions)
 - **Improve docs** - Even fixing typos helps!
 - **Add tests** - Help us improve reliability
-- **Design improvements** - Make StripeMeter more beautiful
-- **New features** - Check our [roadmap](https://github.com/stripemeter/stripemeter/projects)
+- **Design improvements** - Make meterguard more beautiful
+- **New features** - Check our [roadmap](https://github.com/meterguard/meterguard/projects)
 
 ### Quick Contribution Guide
 
@@ -480,8 +480,8 @@ pnpm test:e2e
 
 ### One-Click Deploy
 
-[![Deploy to Railway](https://railway.app/button.svg)](https://railway.app/template/stripemeter)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/stripemeter/stripemeter)
+[![Deploy to Railway](https://railway.app/button.svg)](https://railway.app/template/meterguard)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/meterguard/meterguard)
 
 ### Docker Production
 
@@ -500,7 +500,7 @@ docker compose -f docker-compose.prod.yml --profile monitoring up -d
 kubectl apply -k infra/k8s/
 
 # Or use Helm
-helm install stripemeter ./charts/stripemeter
+helm install meterguard ./charts/meterguard
 ```
 
 ## Performance & Monitoring
@@ -520,21 +520,21 @@ helm install stripemeter ./charts/stripemeter
 
 ## License
 
-StripeMeter is [MIT licensed](./LICENSE). Use it, modify it, distribute it - we believe in open source!
+meterguard is [MIT licensed](./LICENSE). Use it, modify it, distribute it - we believe in open source!
 
 ## Acknowledgments
 
 Built with ❤️ by the open-source community. Special thanks to:
 
 - [Stripe](https://stripe.com) for the amazing payments platform
-- All our [contributors](https://github.com/stripemeter/stripemeter/graphs/contributors)
+- All our [contributors](https://github.com/meterguard/meterguard/graphs/contributors)
 ---
 
 <div align="center">
 
-**If StripeMeter helps your business, please give us a star!**
+**If meterguard helps your business, please give us a star!**
 
-[Star on GitHub](https://github.com/stripemeter/stripemeter) • [Documentation](https://docs.stripemeter.io) • [Community](https://discord.gg/stripemeter)
+[Star on GitHub](https://github.com/meterguard/meterguard) • [Documentation](https://docs.meterguard.io) • [Community](https://discord.gg/meterguard)
 
 Made with ❤️ by developers who believe in billing transparency
 
